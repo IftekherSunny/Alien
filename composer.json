@@ -1,0 +1,16 @@
+{
+    "name": "sun/alien",
+    "description": "This package helps you to create alias for your class namespace.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Iftekher Sunny",
+            "email": "iftekhersunny@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sun\\": "src/"
+        }
+    }
+}
