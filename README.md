@@ -45,7 +45,7 @@ Added your alias and namespace. Like as..
  return [
 
      'Mail'	=> 'SunMailer\Mailer',
-     'View' 	=> 'SunMailer\View'
+     'View' => 'SunMailer\View'
 
  ];
 ```
