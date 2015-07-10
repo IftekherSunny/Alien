@@ -1,5 +1,7 @@
 # Alien #
 
+[![Latest Stable Version](https://poser.pugx.org/sun/alien/v/stable)](https://packagist.org/packages/sun/alien) [![Total Downloads](https://poser.pugx.org/sun/alien/downloads)](https://packagist.org/packages/sun/alien) [![Latest Unstable Version](https://poser.pugx.org/sun/alien/v/unstable)](https://packagist.org/packages/sun/alien) [![License](https://poser.pugx.org/sun/alien/license)](https://packagist.org/packages/sun/alien)
+
 This package helps you to create alias for your class namespace.
 
 ### Installation Process ###
