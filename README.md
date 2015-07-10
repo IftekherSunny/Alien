@@ -51,4 +51,4 @@ Added your alias and namespace. Like as..
 
 ### License ###
 
-This package is licensed under the [MIT License](https://bitbucket.org/IftekherSunny/alien/src/ab9fedcdc4d33d00d0cb0979e59c79b379d92c48/LICENSE)
+This package is licensed under the [MIT License](https://github.com/IftekherSunny/Alien/blob/master/LICENSE)
