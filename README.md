@@ -44,7 +44,8 @@ Added your alias and namespace. Like as..
 ```php
  return [
 
-     'Mail' => 'Sun\Mailer'
+     'Mail'	=> 'SunMailer\Mailer',
+     'View' 	=> 'SunMailer\View'
 
  ];
 ```

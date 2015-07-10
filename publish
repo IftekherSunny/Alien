@@ -1,6 +1,6 @@
 <?php
 
-$dir = __DIR__.'/../../config';
+$dir = __DIR__.'/../../../config';
 
 if (! file_exists($dir))  mkdir($dir, 0777, true);
 
@@ -9,7 +9,7 @@ if(file_exists($dir.'/alien.php'))
 	echo 'Config file already exists.';
 }
 else {
-	copy(__DIR__.'/config.php',__DIR__.'/../../config/alien.php');
+	copy(__DIR__.'/config.php', $dir.'/alien.php');
 
 	echo 'Config file has been published successfully.';
 }
