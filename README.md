@@ -34,7 +34,7 @@ If you install Alien manually just open config.php file located at Alien/config.
 If you install Alien via composer you need to publish Alien configuration file. Run this command in your terminal to publish alien configuration file. 
 
 ```
- Php vendor/alien/publish
+ Php vendor/sun/alien/publish
 ```
 
 Then, open alien.php file located at config/alien.php.
@@ -45,7 +45,7 @@ Added your alias and namespace. Like as..
  return [
 
      'Mail'	=> 'SunMailer\Mailer',
-     'View' => 'SunMailer\View'
+     'View'	=> 'SunMailer\View'
 
  ];
 ```

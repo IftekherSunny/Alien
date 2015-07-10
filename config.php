@@ -2,6 +2,7 @@
 
 return [
 
-    'Mail' => 'Sun\Mailer'
+    'Mail' => 'SunMailer\Mailer',
+    'View' => 'SunMailer\View'
 
 ];
