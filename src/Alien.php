@@ -2,29 +2,63 @@
 
 namespace Sun;
 
-class Alien
+use Exception;
+use ReflectionClass;
+use ReflectionMethod;
+
+abstract class Alien
 {
-    protected $alien;
+    /**
+     * @var string $method method name
+     */
+    protected static $method;
 
-    public function __construct()
+    /**
+     * @var array $arguments method arguments
+     */
+    protected static $arguments;
+
+
+    /**
+     * To execute method
+     *
+     * @param $object
+     *
+     * @throws Exception
+     */
+    public static function execute($object)
     {
-        if (file_exists(__DIR__ . '/../../../../config/alien.php')) {
-            $this->alien = require_once __DIR__ . '/../../../../config/alien.php';
-        } else {
-            $this->alien = require_once __DIR__ . '/../config.php';
+        $class = new ReflectionClass($object);
+
+        $className = $class->getName();
+
+        if(! $class->hasMethod(static::$method)) {
+            throw new Exception("Method [ ". static::$method. " ] not found.");
         }
 
+        $reflectionMethod = new ReflectionMethod($className, static::$method);
+        $reflectionMethod->invokeArgs($object, static::$arguments);
     }
 
-    public function generateAlien()
+    /**
+     * @param $method
+     * @param $arguments
+     *
+     * @throws Exception
+     */
+    public static function __callStatic($method, $arguments)
     {
-        foreach ($this->alien as $alias => $namespace) {
-            class_alias($namespace, $alias);
-        }
+        static::$method = $method;
+        static::$arguments = $arguments;
+
+        static::execute(static::registerAlien());
     }
 
-    public static function load()
-    {
-        (new Alien)->generateAlien();
-    }
+    /**
+     * To register Alien
+     *
+     * @return object
+     */
+    public abstract static function registerAlien ();
+
 }
