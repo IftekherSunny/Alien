@@ -10,7 +10,7 @@ Alien helps you to create alias for your class namespace.
 Just copy Alien folder somewhere into your project directory. Then include Alien autoloader.
 
 ```php
- require_once('/path/to/alien/autoload.php');
+ require_once('/path/to/Alien/autoload.php');
 ```
 
 Alien is also available via Composer/Packagist.

@@ -3,7 +3,7 @@
 return [
 
     'File' => 'Sun\FilesystemAlien',
-    'Mail' => 'SunMailer\Mailer',
-    'View' => 'SunMailer\View'
+    'Mail' => 'SunMailer\MailerAlien',
+    'View' => 'SunMailer\ViewAlien'
 
 ];
