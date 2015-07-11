@@ -18,7 +18,6 @@ abstract class Alien
      */
     protected static $arguments;
 
-
     /**
      * To execute method
      *
@@ -32,12 +31,12 @@ abstract class Alien
 
         $className = $class->getName();
 
-        if(! $class->hasMethod(static::$method)) {
-            throw new Exception("Method [ ". static::$method. " ] not found.");
+        if (!$class->hasMethod(static::$method)) {
+            throw new Exception("Method [ " . static::$method . " ] not found.");
         }
 
         $reflectionMethod = new ReflectionMethod($className, static::$method);
-        $reflectionMethod->invokeArgs($object, static::$arguments);
+        return $reflectionMethod->invokeArgs($object, static::$arguments);
     }
 
     /**
@@ -51,7 +50,7 @@ abstract class Alien
         static::$method = $method;
         static::$arguments = $arguments;
 
-        static::execute(static::registerAlien());
+        return static::execute(static::registerAlien());
     }
 
     /**
@@ -59,6 +58,6 @@ abstract class Alien
      *
      * @return object
      */
-    public abstract static function registerAlien ();
+    abstract public static function registerAlien();
 
 }
