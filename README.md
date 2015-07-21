@@ -16,7 +16,7 @@ Just copy Alien folder somewhere into your project directory. Then include Alien
 Alien is also available via Composer/Packagist.
 
 ```
- composer require sun\alien
+ composer require sun/alien
 ```
 
 You need to call Alien load method to initialize everything.
