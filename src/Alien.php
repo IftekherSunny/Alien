@@ -2,6 +2,7 @@
 
 namespace Sun;
 
+use DI\ContainerBuilder;
 use Exception;
 use ReflectionClass;
 use ReflectionMethod;
@@ -23,11 +24,14 @@ abstract class Alien
      *
      * @param $object
      *
+     * @return mixed
      * @throws Exception
      */
-    public static function execute($object)
+    public function execute($object)
     {
         $class = new ReflectionClass($object);
+
+        $container = ContainerBuilder::buildDevContainer();
 
         $className = $class->getName();
 
@@ -35,14 +39,22 @@ abstract class Alien
             throw new Exception("Method [ " . static::$method . " ] not found.");
         }
 
-        $reflectionMethod = new ReflectionMethod($className, static::$method);
-        return $reflectionMethod->invokeArgs($object, static::$arguments);
+        try {
+            $instance = $container->get($className);
+
+            $reflectionMethod = new ReflectionMethod($className, static::$method);
+
+            return $reflectionMethod->invokeArgs($instance, static::$arguments);
+        } catch (DefinitionException $e) {
+            throw new BindingException("Binding Error.");
+        }
     }
 
     /**
      * @param $method
      * @param $arguments
      *
+     * @return mixed
      * @throws Exception
      */
     public static function __callStatic($method, $arguments)
@@ -52,6 +64,7 @@ abstract class Alien
 
         return static::execute(static::registerAlien());
     }
+
 
     /**
      * To register Alien
