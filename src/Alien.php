@@ -2,10 +2,10 @@
 
 namespace Sun;
 
-use DI\ContainerBuilder;
 use Exception;
 use ReflectionClass;
 use ReflectionMethod;
+use DI\ContainerBuilder;
 
 abstract class Alien
 {
@@ -45,7 +45,8 @@ abstract class Alien
             $reflectionMethod = new ReflectionMethod($className, static::$method);
 
             return $reflectionMethod->invokeArgs($instance, static::$arguments);
-        } catch (DefinitionException $e) {
+        } 
+        catch (DefinitionException $e) {
             throw new BindingException("Binding Error.");
         }
     }
