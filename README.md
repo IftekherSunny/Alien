@@ -1,5 +1,6 @@
 ## Alien
 
+[![Build Status](https://travis-ci.org/IftekherSunny/Alien.svg)](https://travis-ci.org/IftekherSunny/Alien)
 [![Total Downloads](https://poser.pugx.org/sun/alien/downloads)](https://packagist.org/packages/sun/alien)
 [![Latest Stable Version](https://poser.pugx.org/sun/alien/v/stable)](https://packagist.org/packages/sun/alien) [![Latest Unstable Version](https://poser.pugx.org/sun/alien/v/unstable)](https://packagist.org/packages/sun/alien) [![License](https://poser.pugx.org/sun/alien/license)](https://packagist.org/packages/sun/alien)
 
