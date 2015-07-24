@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/sun/alien/downloads)](https://packagist.org/packages/sun/alien)
 [![Latest Stable Version](https://poser.pugx.org/sun/alien/v/stable)](https://packagist.org/packages/sun/alien) [![Latest Unstable Version](https://poser.pugx.org/sun/alien/v/unstable)](https://packagist.org/packages/sun/alien) [![License](https://poser.pugx.org/sun/alien/license)](https://packagist.org/packages/sun/alien)
 
-Alien helps you to create alias for your class namespace.
+Alien helps you to create alias for your class namespace. Its also injected all the dependencies of your class.
 
 ## Installation Process
 
@@ -55,19 +55,19 @@ Added your alias and namespace. Like as..
 You can create Alien class by extending Alien class. Here an example -
 
 ```php
-use Sun;
+namespace Sun;
 
-class FilesystemAlien extends Alien
+class FilesystemAlien extends \Sun\Alien
 {
 
     /**
      * To register Alien
      *
-     * @return object
+     * @return string namespace
      */
     public static function registerAlien()
     {
-        return new Filesystem();
+        return 'Sun\Filesystem';
     }
 }
 ```
@@ -79,7 +79,7 @@ Now you can use any method of your class static way ( without creating object of
 Let, Filesystem class has a method create(). Calling create method of Filesystem class -
 
 ```php
-$filesystem = new Filesystem;
+$filesystem = new Sun\Filesystem;
 $filesystem->create();
 ```
 

@@ -3,9 +3,10 @@
 namespace Sun;
 
 use Exception;
-use ReflectionClass;
 use ReflectionMethod;
+use ReflectionException;
 use DI\ContainerBuilder;
+use DI\Definition\Exception\DefinitionException;
 
 abstract class Alien
 {
@@ -22,32 +23,27 @@ abstract class Alien
     /**
      * To execute method
      *
-     * @param $object
+     * @param $namespace
      *
      * @return mixed
-     * @throws Exception
+     * @throws BindingException
+     * @throws MethodNotFoundException
+     * @throws \DI\NotFoundException
      */
-    public function execute($object)
+    public static function execute($namespace)
     {
-        $class = new ReflectionClass($object);
-
         $container = ContainerBuilder::buildDevContainer();
 
-        $className = $class->getName();
-
-        if (!$class->hasMethod(static::$method)) {
-            throw new Exception("Method [ " . static::$method . " ] not found.");
-        }
-
         try {
-            $instance = $container->get($className);
+            $instance = $container->get($namespace);
 
-            $reflectionMethod = new ReflectionMethod($className, static::$method);
+            $reflectionMethod = new ReflectionMethod($instance, static::$method);
 
             return $reflectionMethod->invokeArgs($instance, static::$arguments);
-        } 
-        catch (DefinitionException $e) {
+        } catch (DefinitionException $e) {
             throw new BindingException("Binding Error.");
+        } catch (ReflectionException $e) {
+            throw new MethodNotFoundException("Method [ " . static::$method . " ] not found.");
         }
     }
 
@@ -66,12 +62,14 @@ abstract class Alien
         return static::execute(static::registerAlien());
     }
 
-
     /**
      * To register Alien
      *
-     * @return object
+     * @return string namespace
+     * @throws Exception
      */
-    abstract public static function registerAlien();
-
+    protected static function registerAlien()
+    {
+        throw new Exception('Alien does not implement registerAlien method.');
+    }
 }

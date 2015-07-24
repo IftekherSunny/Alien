@@ -1,6 +1,6 @@
 {
     "name": "sun/alien",
-    "description": "This package helps you to create alias for your class namespace.",
+    "description": "Alien helps you to create alias for your class namespace. Its also injected all the dependencies of your class.",
     "keywords": ["alien", "facades", "laravel like facades", "alias", "php alias"],
     "license": "MIT",
     "authors": [
@@ -13,6 +13,9 @@
     "require": {
         "php": ">=5.4.0",
         "php-di/php-di": "^5.0"
+    },
+   "require-dev": {
+        "phpunit/phpunit": "~4.7"
     },
     "autoload": {
         "psr-4": {
