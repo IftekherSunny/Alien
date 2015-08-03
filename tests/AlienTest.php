@@ -13,7 +13,7 @@ class AlienTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException   \Sun\MethodNotFoundException
-     * @expectedExceptionMessage    Method [ getAllFiles ] not found.
+     * @expectedExceptionMessage    Method [ getAllFiles ] does not exist.
      */
     public function it_throws_method_not_found_exception_if_the_method_name_you_provide_does_not_exists()
     {
@@ -23,7 +23,6 @@ class AlienTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \Sun\BindingException
-     * @expectedExceptionMessage Binding Error.
      */
     public function it_throws_binding_exception_if_you_try_to_create_an_alien_for_an_interface()
     {

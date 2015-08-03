@@ -11,7 +11,9 @@ class AlienLoader
 
     public function __construct()
     {
-        if (file_exists(__DIR__ . '/../../../../config/alien.php')) {
+        if (file_exists(__DIR__ . '/../../../../config/alien.php') && function_exists('config')) {
+            $this->alien = config('alien');
+        } elseif(file_exists(__DIR__ . '/../../../../config/alien.php')) {
             $this->alien = require_once __DIR__ . '/../../../../config/alien.php';
         } else {
             $this->alien = require_once __DIR__ . '/../config.php';

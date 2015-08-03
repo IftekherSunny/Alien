@@ -32,18 +32,23 @@ abstract class Alien
      */
     public static function execute($namespace)
     {
-        $container = ContainerBuilder::buildDevContainer();
+        if(function_exists('app')) {
+            $container = app();
+        }
+        else {
+            $container = ContainerBuilder::buildDevContainer();
+        }
 
         try {
-            $instance = $container->get($namespace);
+            $instance = $container->make($namespace);
 
             $reflectionMethod = new ReflectionMethod($instance, static::$method);
 
             return $reflectionMethod->invokeArgs($instance, static::$arguments);
         } catch (DefinitionException $e) {
-            throw new BindingException("Binding Error.");
+            throw new BindingException("Binding Error [ ". $e->getMessage() ." ]");
         } catch (ReflectionException $e) {
-            throw new MethodNotFoundException("Method [ " . static::$method . " ] not found.");
+            throw new MethodNotFoundException("Method [ " . static::$method . " ] does not exist.");
         }
     }
 
