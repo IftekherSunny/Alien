@@ -11,12 +11,16 @@ use DI\Definition\Exception\DefinitionException;
 abstract class Alien
 {
     /**
-     * @var string $method method name
+     * Method name
+     *
+     * @var string
      */
     protected static $method;
 
     /**
-     * @var array $arguments method arguments
+     * Method arguments
+     *
+     * @var array
      */
     protected static $arguments;
 

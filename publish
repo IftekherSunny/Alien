@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 $dir = __DIR__.'/../../../config';
@@ -7,8 +8,7 @@ if (! file_exists($dir))  mkdir($dir, 0777, true);
 if(file_exists($dir.'/alien.php'))
 {
 	echo 'Config file already exists.';
-}
-else {
+} else {
 	copy(__DIR__.'/config.php', $dir.'/alien.php');
 
 	echo 'Config file has been published successfully.';
