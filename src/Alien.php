@@ -25,6 +25,13 @@ abstract class Alien
     protected static $arguments;
 
     /**
+     * Application container
+     *
+     * @var \DI\ContainerBuilder
+     */
+    protected static $container;
+
+    /**
      * To execute method
      *
      * @param $namespace
@@ -34,41 +41,32 @@ abstract class Alien
      * @throws MethodNotFoundException
      * @throws \DI\NotFoundException
      */
-    public static function execute($namespace)
+    protected static function execute($namespace)
     {
-        if(function_exists('app')) {
-            $container = app();
-        }
-        else {
-            $container = ContainerBuilder::buildDevContainer();
-        }
-
         try {
-            $instance = $container->make($namespace);
+            $instance = static::$container->make($namespace);
 
             $reflectionMethod = new ReflectionMethod($instance, static::$method);
 
             return $reflectionMethod->invokeArgs($instance, static::$arguments);
         } catch (DefinitionException $e) {
-            throw new BindingException("Binding Error [ ". $e->getMessage() ." ]");
+            throw new BindingException("Binding Error [ " . $e->getMessage() . " ]");
         } catch (ReflectionException $e) {
             throw new MethodNotFoundException("Method [ " . static::$method . " ] does not exist.");
         }
     }
 
     /**
-     * @param $method
-     * @param $arguments
-     *
-     * @return mixed
-     * @throws Exception
+     * Set application container
      */
-    public static function __callStatic($method, $arguments)
+    protected static function setContainer()
     {
-        static::$method = $method;
-        static::$arguments = $arguments;
-
-        return static::execute(static::registerAlien());
+        if(function_exists('app')) {
+            static::$container = app();
+        }
+        else {
+            static::$container = ContainerBuilder::buildDevContainer();
+        }
     }
 
     /**
@@ -80,5 +78,26 @@ abstract class Alien
     protected static function registerAlien()
     {
         throw new Exception('Alien does not implement registerAlien method.');
+    }
+
+    /**
+     * To handle static call dynamically
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public static function __callStatic($method, $arguments)
+    {
+        static::$method = $method;
+        static::$arguments = $arguments;
+
+        if(is_null(static::$container)) {
+            static::setContainer();
+        }
+
+        return static::execute(static::registerAlien());
     }
 }
