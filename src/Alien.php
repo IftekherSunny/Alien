@@ -2,6 +2,7 @@
 
 namespace Sun;
 
+use Mockery;
 use Exception;
 use ReflectionMethod;
 use ReflectionException;
@@ -32,19 +33,24 @@ abstract class Alien
     protected static $container;
 
     /**
-     * To execute method
+     * Store mocked class
      *
-     * @param $namespace
+     * @var array
+     */
+    protected static $mocked;
+
+    /**
+     * Execute method of the registered alien
      *
      * @return mixed
      * @throws BindingException
      * @throws MethodNotFoundException
      * @throws \DI\NotFoundException
      */
-    protected static function execute($namespace)
+    protected static function execute()
     {
         try {
-            $instance = static::$container->make($namespace);
+            $instance = static::getInstance();
 
             $reflectionMethod = new ReflectionMethod($instance, static::$method);
 
@@ -67,6 +73,32 @@ abstract class Alien
         else {
             static::$container = ContainerBuilder::buildDevContainer();
         }
+    }
+
+    /**
+     * Get the class instance of the registered alien
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    protected static function getInstance()
+    {
+        return isset(static::$mocked[static::registerAlien()])? static::$mocked[static::registerAlien()] : static::$container->make(static::registerAlien());
+    }
+
+    /**
+     * Initiate mock expectation for the registered alien
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public static function shouldReceive()
+    {
+        if(!isset(static::$mocked[static::registerAlien()])) {
+            static::$mocked[static::registerAlien()] = Mockery::mock(static::registerAlien());
+        }
+
+        return call_user_func_array([static::$mocked[static::registerAlien()], 'shouldReceive'], func_get_args());
     }
 
     /**
@@ -98,6 +130,6 @@ abstract class Alien
             static::setContainer();
         }
 
-        return static::execute(static::registerAlien());
+        return static::execute();
     }
 }

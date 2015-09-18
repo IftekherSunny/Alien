@@ -69,8 +69,6 @@ class ObjectCreator implements DefinitionResolver
      */
     public function resolve(Definition $definition, array $parameters = [])
     {
-        $this->assertIsObjectDefinition($definition);
-
         // Lazy?
         if ($definition->isLazy()) {
             return $this->createProxy($definition, $parameters);
@@ -89,15 +87,7 @@ class ObjectCreator implements DefinitionResolver
      */
     public function isResolvable(Definition $definition, array $parameters = [])
     {
-        $this->assertIsObjectDefinition($definition);
-
-        if (! class_exists($definition->getClassName())) {
-            return false;
-        }
-
-        $classReflection = new ReflectionClass($definition->getClassName());
-
-        return $classReflection->isInstantiable();
+        return $definition->isInstantiable();
     }
 
     /**
@@ -127,7 +117,7 @@ class ObjectCreator implements DefinitionResolver
      * Creates an instance of the class and injects dependencies..
      *
      * @param ObjectDefinition $definition
-     * @param array           $parameters      Optional parameters to use to create the instance.
+     * @param array            $parameters      Optional parameters to use to create the instance.
      *
      * @throws DefinitionException
      * @throws DependencyException
@@ -137,9 +127,10 @@ class ObjectCreator implements DefinitionResolver
     {
         $this->assertClassExists($definition);
 
-        $classReflection = new ReflectionClass($definition->getClassName());
+        $classname = $definition->getClassName();
+        $classReflection = new ReflectionClass($classname);
 
-        $this->assertClassIsInstantiable($definition, $classReflection);
+        $this->assertClassIsInstantiable($definition);
 
         $constructorInjection = $definition->getConstructorInjection();
 
@@ -153,7 +144,7 @@ class ObjectCreator implements DefinitionResolver
             if (count($args) > 0) {
                 $object = $classReflection->newInstanceArgs($args);
             } else {
-                $object = $classReflection->newInstance();
+                $object = new $classname;
             }
 
             $this->injectMethodsAndProperties($object, $definition);
@@ -168,6 +159,14 @@ class ObjectCreator implements DefinitionResolver
                 "Entry %s cannot be resolved: %s",
                 $definition->getName(),
                 $e->getMessage()
+            ));
+        }
+
+        if (! $object) {
+            throw new DependencyException(sprintf(
+                "Entry %s cannot be resolved: %s could not be constructed",
+                $definition->getName(),
+                $classReflection->getName()
             ));
         }
 
@@ -202,7 +201,10 @@ class ObjectCreator implements DefinitionResolver
     private function injectProperty($object, PropertyInjection $propertyInjection)
     {
         $propertyName = $propertyInjection->getPropertyName();
-        $property = new ReflectionProperty(get_class($object), $propertyName);
+
+        $className = $propertyInjection->getClassName();
+        $className = $className ?: get_class($object);
+        $property = new ReflectionProperty($className, $propertyName);
 
         $value = $propertyInjection->getValue();
 
@@ -230,19 +232,9 @@ class ObjectCreator implements DefinitionResolver
         $property->setValue($object, $value);
     }
 
-    private function assertIsObjectDefinition(Definition $definition)
-    {
-        if (!$definition instanceof ObjectDefinition) {
-            throw new \InvalidArgumentException(sprintf(
-                'This definition resolver is only compatible with ObjectDefinition objects, %s given',
-                get_class($definition)
-            ));
-        }
-    }
-
     private function assertClassExists(ObjectDefinition $definition)
     {
-        if (!class_exists($definition->getClassName()) && !interface_exists($definition->getClassName())) {
+        if (! $definition->classExists()) {
             throw DefinitionException::create($definition,
             sprintf(
                 "Entry %s cannot be resolved: class %s doesn't exist",
@@ -252,9 +244,9 @@ class ObjectCreator implements DefinitionResolver
         }
     }
 
-    private function assertClassIsInstantiable(ObjectDefinition $definition, ReflectionClass $classReflection)
+    private function assertClassIsInstantiable(ObjectDefinition $definition)
     {
-        if (!$classReflection->isInstantiable()) {
+        if (! $definition->isInstantiable()) {
             throw DefinitionException::create($definition,
             sprintf(
                 "Entry %s cannot be resolved: class %s is not instantiable",

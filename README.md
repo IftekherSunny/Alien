@@ -51,9 +51,9 @@ Added your alias and namespace. Like as..
  ];
 ```
 
-## Creating Alien Class
+## Creating Alien
 
-You can create Alien class by extending Alien class. Here an example -
+You can create Alien by extending Alien class. Here an example -
 
 ```php
 namespace Sun;
@@ -88,6 +88,27 @@ Using Alien Now, you can also call create method by this way -
 
 ```php
 File::create();
+```
+
+## Testing Alien
+
+You can test your alien class, here an example
+
+```php
+$mocked = File::shouldReceive('create')
+                ->once()
+                ->andReturn('mocked');
+
+$this->assertEquals('mocked', $mocked); // true
+```
+
+Don't forget to call close method of the mockery class. Here an example for the PHPUnit testing framework
+
+```php
+public function tearDown()
+{
+    Mockery::close();
+}
 ```
 
 ## License

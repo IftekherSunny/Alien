@@ -4,6 +4,11 @@ namespace Sun;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+
+/**
+ * Class FilesystemDriver
+ * @package Sun
+ */
 class FilesystemDriver
 {
     public function name()
@@ -12,6 +17,10 @@ class FilesystemDriver
     }
 }
 
+/**
+ * Class Filesystem
+ * @package Sun
+ */
 class Filesystem
 {
     protected $driver;
@@ -26,6 +35,10 @@ class Filesystem
     }
 }
 
+/**
+ * Class FilesystemAlien
+ * @package Sun
+ */
 class FilesystemAlien extends Alien
 {
     /**
@@ -39,11 +52,19 @@ class FilesystemAlien extends Alien
     }
 }
 
+/**
+ * Interface FilesystemInterface
+ * @package Sun
+ */
 interface FilesystemInterface
 {
     public function getDriverName();
 }
 
+/**
+ * Class FilesystemInterfaceAlien
+ * @package Sun
+ */
 class FilesystemInterfaceAlien extends Alien
 {
     /**
@@ -57,6 +78,10 @@ class FilesystemInterfaceAlien extends Alien
     }
 }
 
+/**
+ * Class Session
+ * @package Sun
+ */
 class Session
 {
     public function get()
@@ -65,7 +90,62 @@ class Session
     }
 }
 
+/**
+ * Class SessionAlien
+ * @package Sun
+ */
 class SessionAlien extends Alien
 {
 
+}
+
+/**
+ * Class Helper
+ * @package Sun
+ */
+class Helper
+{
+    public function profileLinkGenerator($username)
+    {
+        return "<a href='/profile/{$username}'>{$username}</a>";
+    }
+}
+
+/**
+ * Class HelperAlien
+ * @package Sun
+ */
+class HelperAlien extends Alien
+{
+    /**
+     * To register Alien
+     *
+     * @return string namespace
+     */
+    protected static function registerAlien()
+    {
+        return 'Sun\Helper';
+    }
+}
+
+
+/**
+ * Register aliases for all alien
+ */
+class_alias('Sun\FilesystemAlien', 'File');
+class_alias('Sun\FilesystemInterfaceAlien', 'FileInterface');
+class_alias('Sun\SessionAlien', 'Session');
+class_alias('Sun\HelperAlien', 'Helper');
+
+
+/**
+ * Class User
+ * @package Sun
+ */
+class User
+{
+    public function profileLink($username)
+    {
+        return \Helper::profileLinkGenerator($username);
+    }
 }

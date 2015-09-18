@@ -47,8 +47,6 @@ class ArrayResolver implements DefinitionResolver
      */
     public function resolve(Definition $definition, array $parameters = [])
     {
-        $this->assertIsArrayDefinition($definition);
-
         $values = $definition->getValues();
 
         $values = $this->resolveNestedDefinitions($definition, $values);
@@ -61,19 +59,7 @@ class ArrayResolver implements DefinitionResolver
      */
     public function isResolvable(Definition $definition, array $parameters = [])
     {
-        $this->assertIsArrayDefinition($definition);
-
         return true;
-    }
-
-    private function assertIsArrayDefinition(Definition $definition)
-    {
-        if (!$definition instanceof ArrayDefinition) {
-            throw new \InvalidArgumentException(sprintf(
-                'This definition resolver is only compatible with ArrayDefinition objects, %s given',
-                get_class($definition)
-            ));
-        }
     }
 
     private function resolveNestedDefinitions(ArrayDefinition $definition, array $values)

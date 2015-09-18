@@ -27,6 +27,7 @@ use InvalidArgumentException;
 use Invoker\Invoker;
 use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
+use Invoker\ParameterResolver\DefaultValueResolver;
 use Invoker\ParameterResolver\NumericArrayResolver;
 use Invoker\ParameterResolver\ResolverChain;
 
@@ -92,7 +93,6 @@ class Container implements ContainerInterface, FactoryInterface, \DI\InvokerInte
 
         // Auto-register the container
         $this->singletonEntries['DI\Container'] = $this;
-        $this->singletonEntries['DI\ContainerInterface'] = $this;
         $this->singletonEntries['DI\FactoryInterface'] = $this;
         $this->singletonEntries['DI\InvokerInterface'] = $this;
     }
@@ -326,9 +326,10 @@ class Container implements ContainerInterface, FactoryInterface, \DI\InvokerInte
     {
         if (! $this->invoker) {
             $parameterResolver = new ResolverChain([
+                new DefinitionParameterResolver($this->definitionResolver),
                 new NumericArrayResolver,
                 new AssociativeArrayResolver,
-                new DefinitionParameterResolver($this->definitionResolver),
+                new DefaultValueResolver,
                 new TypeHintContainerResolver($this->wrapperContainer),
             ]);
 

@@ -13,6 +13,8 @@ use DI\Definition\Exception\DefinitionException;
 use DI\Definition\FactoryDefinition;
 use DI\Definition\Definition;
 use Interop\Container\ContainerInterface;
+use Invoker\Invoker;
+use Invoker\ParameterResolver\NumericArrayResolver;
 
 /**
  * Resolves a factory definition to a value.
@@ -26,6 +28,11 @@ class FactoryResolver implements DefinitionResolver
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var Invoker|null
+     */
+    private $invoker;
 
     /**
      * The resolver needs a container. This container will be passed to the factory as a parameter
@@ -49,8 +56,6 @@ class FactoryResolver implements DefinitionResolver
      */
     public function resolve(Definition $definition, array $parameters = [])
     {
-        $this->assertIsFactoryDefinition($definition);
-
         $callable = $definition->getCallable();
 
         if (! is_callable($callable)) {
@@ -60,7 +65,11 @@ class FactoryResolver implements DefinitionResolver
             ));
         }
 
-        return call_user_func($callable, $this->container);
+        if (! $this->invoker) {
+            $this->invoker = new Invoker(new NumericArrayResolver, $this->container);
+        }
+
+        return $this->invoker->call($callable, [$this->container]);
     }
 
     /**
@@ -68,18 +77,6 @@ class FactoryResolver implements DefinitionResolver
      */
     public function isResolvable(Definition $definition, array $parameters = [])
     {
-        $this->assertIsFactoryDefinition($definition);
-
         return true;
-    }
-
-    private function assertIsFactoryDefinition(Definition $definition)
-    {
-        if (!$definition instanceof FactoryDefinition) {
-            throw new \InvalidArgumentException(sprintf(
-                'This definition resolver is only compatible with FactoryDefinition objects, %s given',
-                get_class($definition)
-            ));
-        }
     }
 }
